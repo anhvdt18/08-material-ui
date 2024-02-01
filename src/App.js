@@ -1,23 +1,36 @@
 import React from "react";
-import { Button, Chip, Divider, Grid, Paper } from "@mui/material";
 import SearchAppBar from "./components/SearchAppBar";
-import JobCard from "./components/JobCard";
-import jobs from "./Jobs.json";
 import BasicPagination from "./components/Pagination";
+import HomePage from "./pages/HomePage";
+import DetailPage from "./pages/DetailPage";
+import { Routes, Route } from "react-router-dom";
+import { ThemeProvider, createTheme } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#232323",
+      light: "#000000",
+      dark: "#000000",
+    },
+  },
+});
 
 function App() {
+  const [page, setPage] = React.useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <SearchAppBar />
-      <Grid container spacing={2} m={1}>
-        {jobs.slice(0, 5).map((job) => (
-          <Grid key={job.id} item xs={8} md={4}>
-            <JobCard job={job} />
-          </Grid>
-        ))}
-      </Grid>
-      <BasicPagination />
-    </div>
+      <Routes>
+        <Route path="/" element={<HomePage page={page} />} />
+        <Route path="/job/:id" element={<DetailPage />} />
+      </Routes>
+      <BasicPagination page={page} handleChange={handleChange} />
+    </ThemeProvider>
   );
 }
 
